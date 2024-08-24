@@ -1,0 +1,4 @@
+1. Create custom topic
+https://learn.microsoft.com/en-us/azure/event-grid/create-custom-topic
+2. Deploy Consumer App(Function App)
+3. Add Event Grid Sub (webhook)

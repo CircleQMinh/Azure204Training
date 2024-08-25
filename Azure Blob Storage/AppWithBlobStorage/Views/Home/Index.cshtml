@@ -1,0 +1,72 @@
+﻿@model List<Uri>
+@{
+    ViewBag.Title = "Index";
+}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+<form method="post" enctype="multipart/form-data" action="/blob/upload">
+    <input type="file" name="file" id="file" onchange="DisplayFilesToUpload()" />
+    <button type="submit">Upload</button>
+</form>
+<p>File To Upload :</p>
+<img id="imagePreview" src="#" alt="Image Preview" style="display:none; max-width: 300px; max-height: 300px;" />
+<p id="FilesToUpload"></p>
+<p>All upload file:</p>
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        <div class="imageBlock">
+            <a href="@item" target="_blank"><img class="thumb" src="@item" alt="images" /></a><br />
+            <div class="deleteDiv"><img class="deleteIcon" src="https://f4.bcbits.com/img/0008163076_21.jpg" title="Delete Image" onclick="deleteImage('@item.Segments[^1]');" /></div>
+        </div>
+    }
+
+}
+<script>
+
+    function deleteImage(item) {
+        var url = "/Blob/Delete";
+        $.post(url, { Name: item }, function (data) {
+            window.location.href = "/Home/Index";
+        });
+    }
+
+    function DisplayFilesToUpload() {
+        var element = document.getElementById("file");
+        var html = "";
+
+        html = "<h3>Image(s) to Upload</h3>"
+        for (var i = 0; i < element.files.length; i++) {
+            html += "<strong>" + (i + 1) + "</strong>. File: ";
+            var file = element.files[i];
+            if ('name' in file) {html += file.name + " (";}
+            if ('size' in file) {html += "size: " + file.size + " bytes)<br>";}
+            if (file) {
+                var reader = new FileReader(); // Create a FileReader object
+                reader.onload = function (e) {
+                    $('#imagePreview').attr('src', e.target.result); // Set the image source to the result of the FileReader
+                    $('#imagePreview').show(); // Show the image element
+                };
+                reader.readAsDataURL(file); // Read the file as a data URL
+            }
+        }
+
+        html += "<div class='fileUpload btn btn-default'><span>Upload</span></div>"
+        document.getElementById("FilesToUpload").innerHTML = html;
+    }
+
+    $('#fileInput').on('change', function () {
+        var file = this.files[0]; // Get the selected file
+        if (file) {
+            var reader = new FileReader(); // Create a FileReader object
+            reader.onload = function (e) {
+                $('#imagePreview').attr('src', e.target.result); // Set the image source to the result of the FileReader
+                $('#imagePreview').show(); // Show the image element
+            };
+            reader.readAsDataURL(file); // Read the file as a data URL
+        }
+    });
+
+
+</script>

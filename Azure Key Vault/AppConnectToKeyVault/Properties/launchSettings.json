@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "AppConnectToKeyVault": {
+      "commandName": "Project"
+    }
+  }
+}
